@@ -5,7 +5,7 @@ public interface IEffectOMatic
 {
   String getName();
   String getDescription();
-  int[] process(float[] data, boolean beat);
+  int[] process(SoundAnalizerData data);
 }
 
 public abstract class EffectBeatDecay implements IEffectOMatic
@@ -16,9 +16,9 @@ public abstract class EffectBeatDecay implements IEffectOMatic
   
   protected abstract float getDecay(int index);
   
-  public int[] process(float[] data, boolean beat)
+  public int[] process(SoundAnalizerData data)
   {
-    if(beat)
+    if(data.getBeat())
     {
       for(int i = 0; i < 5; i++)
       {
@@ -63,7 +63,7 @@ public class EffectOff implements IEffectOMatic
   
   String getDescription() { return "Spento"; }
   
-  public int[] process(float[] data, boolean beat)
+  public int[] process(SoundAnalizerData data)
   {
     return new int[] {0, 0, 0, 0, 0};
   }
@@ -79,7 +79,7 @@ public class EffectKitt extends EffectBaseStep
   
   String getDescription() { return "Kitt (SuperCar)"; }
   
-  public int[] process(float[] data, boolean beat)
+  public int[] process(SoundAnalizerData data)
   {
     if(!isStep())
     {
@@ -142,7 +142,7 @@ public class EffectNoise extends EffectBaseStep
   
   String getDescription() { return "Disturbo"; }
   
-  public int[] process(float[] data, boolean beat)
+  public int[] process(SoundAnalizerData data)
   {
     if(!isStep())
     {
@@ -202,12 +202,12 @@ public class EffectEqualizer implements IEffectOMatic
   
   String getDescription() { return "Equalizzatore"; }
   
-  public int[] process(float[] data, boolean beat)
+  public int[] process(SoundAnalizerData data)
   {   
     int[] ret = new int[5];
     for(int i = 0; i < 5; i++)
     {
-      ret[i] = int(data[i] * 255);
+      ret[i] = int(data.getValues()[i] * 255);
     }
     return ret;
   }
@@ -219,21 +219,21 @@ public class EffectEqualizerDecay extends EffectBeatDecay
   
   String getDescription() { return "Equ. Echo"; }
   
-  private float[] incomingData;
+  private SoundAnalizerData incomingData;
   
-  public int[] process(float[] data, boolean beat)
+  public int[] process(SoundAnalizerData data)
   {
-    if(beat)
+    if(data.getBeat())
     {
       incomingData = data;
     }
     
-    return super.process(data, beat);
+    return super.process(data);
   }
   
   protected int getPattern(int index)
   {
-    return int(incomingData[index] * 255);
+    return int(incomingData.getValues()[index] * 255);
   }
   
   protected float getDecay(int index)

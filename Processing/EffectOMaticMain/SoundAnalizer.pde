@@ -16,11 +16,7 @@ public class SoundAnalizer
   private float timeStamp = 0;
   private float maxAverage = 0;
   private float localMaxAverage = 0;
-  
-  private boolean visible = false;
-  private int x;
-  private int y;
-  private int baseX;
+  private SoundAnalizerData data;
   
   /**
    * Crea un analizzatore di suoni
@@ -32,23 +28,21 @@ public class SoundAnalizer
    * @param size
    * Number of value generated
    */
-  public SoundAnalizer(PApplet fileSystemHandler, int size)
+  public SoundAnalizer(PApplet fileSystemHandler)
   {
-    minim = new Minim(this);
+    minim = new Minim(fileSystemHandler);
     in = minim.getLineIn(Minim.STEREO, 512, 20000, 16);
     //in = minim.getLineIn(Minim.STEREO, 512, 44100, 16);
     fft = new FFT(in.bufferSize(), in.sampleRate());
     
-    //fft.linAverages(size);
+    //fft.linAverages(5);
     //fft.logAverages(690, 1);
     fft.logAverages(11, 1);
     
     beat = new BeatDetect();
-    
-    setVisiblePosition(0, 0);
   }
   
-  public float[] getValues()
+  public void next()
   {
     float[] ret = new float[fft.avgSize()];
     
@@ -77,8 +71,6 @@ public class SoundAnalizer
       }
     }
     
-    //TODO
-    
     // resetto il massimo
     if(millis() - timeStamp > DEADLINE)
     {
@@ -88,18 +80,19 @@ public class SoundAnalizer
     }
     
     beat.detect(in.mix);
+    boolean beatVal = false;
+    //beatVal = beat.isKick();
+    //beatVal = beat.isSnare();
+    //beatVal = beat.isHat();
+    //beatVal = beat.isRange();
+    beatVal = beat.isOnset();
     
-    draw(ret);
-    return ret;
+    data = new SoundAnalizerData(ret, beatVal);
   }
-  
-  public boolean getBeat()
+
+  public SoundAnalizerData getData()
   {
-    //return beat.isKick();
-    //return beat.isSnare();
-    //return beat.isHat();
-    //return beat.isRange();
-    return beat.isOnset();
+    return data;
   }
   
   public void stop()
@@ -107,37 +100,26 @@ public class SoundAnalizer
     in.close();
     minim.stop();
   }
+}
+
+public class SoundAnalizerData
+{
+  private float[] values;
+  private boolean beat;
   
-  public void setVisible(boolean value)
+  public SoundAnalizerData(float[] values, boolean beat)
   {
-    visible = value;
+    this.values = values;
+    this.beat = beat;
   }
   
-  public void setVisiblePosition(int x, int y)
+  public float[] getValues()
   {
-    this.x = x;
-    this.y = y;
-    baseX = x - ((fft.avgSize() - 1) * 30 / 2);
+    return values;
   }
   
-  private void draw(float[] ret)
+  public boolean getBeat()
   {
-    if(visible)
-    {
-      stroke(0);
-      fill(color(255));
-      
-      for(int i = 0; i < fft.avgSize(); i++)
-      {
-        // show
-        rect(i * 30 + baseX, y - ret[i] * 25, 20, ret[i] * 50);
-      }
-      
-      if(!getBeat())
-      {
-        fill(color(0));
-      }
-      rect(x, y + 15, (fft.avgSize() - 1) * 30 + 20, 10);
-    }
+    return beat;
   }
 }

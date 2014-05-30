@@ -7,6 +7,7 @@ import java.util.Map;
 int RANDOM_TIMER = 5000; // 5 secondi
 
 SoundAnalizer sound;
+SoundAnalizerVisualizer soundVis;
 
 EffectOMaticVisualizer vis;
 EffectOMaticCommander comm;
@@ -69,9 +70,9 @@ void setup()
     group3.add(new RadioButton(effects[i].getName(), "", baseX + 30, baseY + verticalPosition + (30 * i)));
   }
  
-  sound = new SoundAnalizer(this, 5);
-  sound.setVisible(true);
-  sound.setVisiblePosition(int(width * boxX), int(height * 0.80));
+  sound = new SoundAnalizer(this);
+  
+  soundVis = new SoundAnalizerVisualizer(int(width * boxX), int(height * 0.80));
 }
 
 void draw()
@@ -111,17 +112,18 @@ void draw()
   stroke(0);
   textFont(fontControlls);
   
-  data = eom.process(sound.getValues(), sound.getBeat());
+  sound.next();
+  soundVis.setValues(sound.getData());
+  data = eom.process(sound.getData());
   comm.setValues(data);
-  
   vis.setValues(data);
   
   group1.draw();
   group2.draw();
   group3.draw();
-  
+  soundVis.draw();
   vis.draw();
-
+  
   stroke(250);
   fill(color(250));
 
