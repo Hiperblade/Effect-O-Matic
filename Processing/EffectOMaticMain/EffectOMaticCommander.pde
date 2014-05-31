@@ -26,7 +26,17 @@ public class EffectOMaticCommander
   {
     if(comPort == null)
     {
-      port = new Serial(fileSystemHandler, Serial.list()[0], speed);
+      for(int i = 0; i < Serial.list().length; i++)
+      {
+        try
+        {
+          port = new Serial(fileSystemHandler, Serial.list()[i], speed);
+          break;
+        }
+        catch(Exception e)
+        {
+        }
+      }
     }
     else
     {
@@ -41,6 +51,10 @@ public class EffectOMaticCommander
     {
       bytes[i] = (byte)values[i];
     }
-    port.write(bytes);
+    
+    if(port != null)
+    {
+      port.write(bytes);
+    }
   }
 }

@@ -36,8 +36,9 @@ public class SoundAnalizer
     fft = new FFT(in.bufferSize(), in.sampleRate());
     
     //fft.linAverages(5);
+    fft.logAverages(600, 1);
     //fft.logAverages(690, 1);
-    fft.logAverages(11, 1);
+    //fft.logAverages(11, 1);
     
     beat = new BeatDetect();
   }

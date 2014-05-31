@@ -59,9 +59,9 @@ public abstract class EffectBaseStep implements IEffectOMatic
 
 public class EffectOff implements IEffectOMatic
 {
-  String getName() { return "Off"; }
+  public String getName() { return "Off"; }
   
-  String getDescription() { return "Spento"; }
+  public String getDescription() { return "Spento"; }
   
   public int[] process(SoundAnalizerData data)
   {
@@ -75,9 +75,9 @@ public class EffectKitt extends EffectBaseStep
   private int position = -1;
   private boolean forward = true;
  
-  String getName() { return "Kitt"; }
+  public String getName() { return "Kitt"; }
   
-  String getDescription() { return "Kitt (SuperCar)"; }
+  public String getDescription() { return "Kitt (SuperCar)"; }
   
   public int[] process(SoundAnalizerData data)
   {
@@ -138,9 +138,9 @@ public class EffectKitt extends EffectBaseStep
 
 public class EffectNoise extends EffectBaseStep
 {
-  String getName() { return "Noise"; }
+  public String getName() { return "Noise"; }
   
-  String getDescription() { return "Disturbo"; }
+  public String getDescription() { return "Disturbo"; }
   
   public int[] process(SoundAnalizerData data)
   {
@@ -154,13 +154,46 @@ public class EffectNoise extends EffectBaseStep
   }
 }
 
+public class EffectDrop extends EffectBeatDecay
+{
+  public String getName() { return "Drop"; }
+  
+  public String getDescription() { return "Goccia"; }
+
+  private int currentDrop;
+  
+  protected int getPattern(int index)
+  {
+    if(index == 0)
+    {
+      int newDrop = currentDrop;
+      while(newDrop == currentDrop)
+      {
+        newDrop = int(random(5));
+      }
+      currentDrop = newDrop;
+    }
+    
+    if(index == currentDrop)
+    {
+      return 255;
+    }
+    return values[index];
+  }
+  
+  protected float getDecay(int index)
+  {
+    return 0.95;
+  }
+}
+
 public class EffectBeat extends EffectBeatDecay
 {
   private final int[] VALUE = new int[]{120, 180, 255, 180, 120};
   
-  String getName() { return "Beat"; }
+  public String getName() { return "Beat"; }
   
-  String getDescription() { return "Colpo"; }
+  public String getDescription() { return "Colpo"; }
   
   protected int getPattern(int index)
   {
@@ -177,9 +210,9 @@ public class EffectBar extends EffectBeatDecay
 {
   private final float DECAY = 0.7;
   
-  String getName() { return "Bar"; }
+  public String getName() { return "Bar"; }
   
-  String getDescription() { return "Barra"; }
+  public String getDescription() { return "Barra"; }
   
   protected int getPattern(int index)
   {
@@ -198,9 +231,9 @@ public class EffectBar extends EffectBeatDecay
 
 public class EffectEqualizer implements IEffectOMatic
 {
-  String getName() { return "Equalizer"; }
+  public String getName() { return "Equalizer"; }
   
-  String getDescription() { return "Equalizzatore"; }
+  public String getDescription() { return "Equalizzatore"; }
   
   public int[] process(SoundAnalizerData data)
   {   
@@ -213,11 +246,12 @@ public class EffectEqualizer implements IEffectOMatic
   }
 }
 
+/*
 public class EffectEqualizerDecay extends EffectBeatDecay
 {
-  String getName() { return "EqualizerDecay"; }
+  public String getName() { return "EqualizerDecay"; }
   
-  String getDescription() { return "Equ. Echo"; }
+  public String getDescription() { return "Equ. Echo"; }
   
   private SoundAnalizerData incomingData;
   
@@ -241,3 +275,4 @@ public class EffectEqualizerDecay extends EffectBeatDecay
     return 0.99;
   }
 }
+*/

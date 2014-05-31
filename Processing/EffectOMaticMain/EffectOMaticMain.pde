@@ -4,7 +4,7 @@
 
 import java.util.Map;
 
-int RANDOM_TIMER = 5000; // 5 secondi
+int RANDOM_TIMER = 60000; // 60 secondi
 
 SoundAnalizer sound;
 SoundAnalizerVisualizer soundVis;
@@ -48,7 +48,7 @@ void setup()
   comm = new EffectOMaticCommander(this);
   comm.setValues(data);
 
-  effects = new IEffectOMatic[]{ new EffectKitt(), new EffectNoise(), new EffectBeat(), new EffectBar(), new EffectEqualizer(), new EffectEqualizerDecay() };  
+  effects = new IEffectOMatic[]{ new EffectKitt(), new EffectNoise(), new EffectDrop(), new EffectBeat(), new EffectBar(), new EffectEqualizer() };  
   
   // controlli
   effectsMap = new HashMap<String, IEffectOMatic>();

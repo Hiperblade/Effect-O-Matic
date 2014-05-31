@@ -1,3 +1,6 @@
+/**
+ */
+
 public class SoundAnalizerVisualizer
 {
   private int x;
