@@ -18,7 +18,13 @@ public class SoundAnalizerVisualizer
     this.data = data;
   }
   
-  private void draw()
+  public void draw(SoundAnalizerData data)
+  {
+    setValues(data);
+    draw();
+  }
+  
+  public void draw()
   {
     stroke(0);
     fill(color(255));

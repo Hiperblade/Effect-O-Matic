@@ -25,8 +25,15 @@ public class EffectOMaticVisualizer
     this.values = values;
   }
   
+  public void draw(int[] values)
+  {
+    setValues(values);
+    draw();
+  }
+  
   public void draw()
   {
+    stroke(0);
     int step = width + width / 2;
     int startX = x - ((number - 1) * step / 2);
   

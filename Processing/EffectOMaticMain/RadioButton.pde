@@ -97,6 +97,17 @@ public class RadioButtonGroup
       buttons.get(i).mousePressed();
     }
   }
+  
+  public void printGroupStatus()
+  {
+    ArrayList<String> a = getValues();
+    print("{ ");
+    for (int i = 0; i < a.size(); i++)
+    {
+      print(a.get(i) + " ");
+    }
+    println("}");
+  }
 }
 
 public class RadioButton
@@ -127,23 +138,26 @@ public class RadioButton
   
   public void draw()
   {
+    ellipseMode(CENTER);
+    rectMode(CENTER);
     if (internalOver(x, y, diameter))
     {
-      fill(color(200));
+      fill(200);
     }
     else
     {
-      fill(color(250));
+      fill(250);
     }
     stroke(0);
     internalDraw(x, y, diameter, diameter);
     
     textAlign(LEFT);
+    fill(250);
     text(text, x + int(diameter * 1.1), y + int(diameter * 0.4)); 
     
     if(isChecked())
     {
-      fill(color(40));
+      fill(40);
       internalDraw(x, y, int(diameter * 0.5), int(diameter * 0.5));
     }
   }
