@@ -1,11 +1,17 @@
-/**
- */
-
 import ddf.minim.analysis.*;
 import ddf.minim.*;
 
+/**
+ * Analizzatore di suoni (usa il segnale di LineIn)
+ *
+ * uso:
+ *
+ * soundAnalizer.next();
+ * SoundAnalizerData data = soundAnalizer.getData();
+ */
 public class SoundAnalizer
 {
+  private final float LOW_THRESHOLD = 0.4; // soglia minima anti rumore di fondo
   private final int DEADLINE = 5000; // 5 secondi
   
   private Minim minim;
@@ -31,18 +37,20 @@ public class SoundAnalizer
   public SoundAnalizer(PApplet fileSystemHandler)
   {
     minim = new Minim(fileSystemHandler);
-    in = minim.getLineIn(Minim.STEREO, 512, 20000, 16);
-    //in = minim.getLineIn(Minim.STEREO, 512, 44100, 16);
+    //in = minim.getLineIn(Minim.STEREO, 512, 20000, 16);
+    in = minim.getLineIn(Minim.STEREO, 512, 44100, 16);
     fft = new FFT(in.bufferSize(), in.sampleRate());
     
-    //fft.linAverages(5);
-    fft.logAverages(600, 1);
+    //fft.logAverages(600, 1);
     //fft.logAverages(690, 1);
-    //fft.logAverages(11, 1);
+    fft.logAverages(11, 1);
     
     beat = new BeatDetect();
   }
   
+  /**
+   * Elabora un nuovo campione
+   */
   public void next()
   {
     float[] ret = new float[fft.avgSize()];
@@ -51,6 +59,11 @@ public class SoundAnalizer
     for(int i = 0; i < fft.avgSize(); i++)
     {
       float tmp = fft.getAvg(i);
+      if(tmp < LOW_THRESHOLD)
+      {
+        tmp = 0;
+      }
+      
       if(tmp > maxAverage)
       {
         maxAverage = tmp;
@@ -91,6 +104,9 @@ public class SoundAnalizer
     data = new SoundAnalizerData(ret, beatVal);
   }
 
+  /**
+   * Restituisce i dati relativi al campione corrente
+   */
   public SoundAnalizerData getData()
   {
     return data;
@@ -103,6 +119,9 @@ public class SoundAnalizer
   }
 }
 
+/**
+ * Contiene i dati elaborati dall'analizer
+ */
 public class SoundAnalizerData
 {
   private float[] values;

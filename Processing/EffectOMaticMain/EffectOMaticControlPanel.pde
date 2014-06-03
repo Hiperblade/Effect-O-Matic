@@ -1,6 +1,8 @@
-/**
- */
+import java.util.Map;
 
+/**
+ * Pannello di controllo (permette di selezionare l'effetto da utilizzare)
+ */
 public class EffectOMaticControlPanel
 {
   private static final int RANDOM_TIMER_DEFAULT = 60000; // 60 secondi
@@ -55,8 +57,8 @@ public class EffectOMaticControlPanel
   }
   
   /**
-    * Restituisce l'effetto corrente
-    */
+   * Restituisce l'effetto corrente
+   */
   public IEffectOMatic getCurrentEffect()
   {
     if(group1.getValue() == offEffect.getName())
@@ -92,6 +94,9 @@ public class EffectOMaticControlPanel
     return currentEffect;
   }
   
+  /**
+   * Disegna i controlli
+   */
   public void draw()
   {
     textFont(fontControlls);
@@ -130,7 +135,10 @@ public class EffectOMaticControlPanel
     endShape(CLOSE);
   }
   
-  void mousePressed() {
+  /**
+   * Gestione del mouse (da richiamare nel mousePressed del programma principale)
+   */
+  public void mousePressed() {
     group1.mousePressed();
     group2.mousePressed();
     group3.mousePressed();

@@ -1,6 +1,15 @@
 /**
+ * Visualizzatore grafico dei dati generati dal SoundAnalizer
+ *
+ * uso:
+ *
+ * soundAnalizerVisualizer.setValues(data);
+ * soundAnalizerVisualizer.draw();
+ *
+ * oppure:
+ *
+ * soundAnalizerVisualizer.draw(data);
  */
-
 public class SoundAnalizerVisualizer
 {
   private int x;
@@ -13,17 +22,26 @@ public class SoundAnalizerVisualizer
     this.y = y;
   }
   
+  /**
+   * Imposta i valori da visualizzare
+   */
   public void setValues(SoundAnalizerData data)
   {
     this.data = data;
   }
   
+  /**
+   * Imposta i valori da visualizzare e li visualizza
+   */
   public void draw(SoundAnalizerData data)
   {
     setValues(data);
     draw();
   }
   
+  /**
+   * Visualizzara i valori correnti
+   */
   public void draw()
   {
     stroke(0);

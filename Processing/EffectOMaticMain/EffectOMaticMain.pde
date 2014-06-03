@@ -1,14 +1,11 @@
 /**
- *
+ * Effect-O-Matic 1.0
  */
-
-import java.util.Map;
-
 SoundAnalizer sound;
-SoundAnalizerVisualizer soundVis;
 EffectOMaticControlPanel controlPanel;
-EffectOMaticVisualizer vis;
 EffectOMaticCommander comm;
+SoundAnalizerVisualizer soundVis;
+EffectOMaticVisualizer vis;
 
 int[] data = new int[]{0, 0, 0, 0, 0};
 
@@ -28,23 +25,23 @@ void setup()
       new EffectKitt(),
       new EffectNoise(),
       new EffectDrop(),
-      new EffectBeat(),
+      new EffectHit(),
       new EffectBar(),
-      new EffectEqualizer()
+      new EffectSpectrum()
       },
       new EffectOff());
 
   // analizzatore del suono
   sound = new SoundAnalizer(this);
-  soundVis = new SoundAnalizerVisualizer(int(width * boxX), int(height * 0.80));
   
-  // visualizzatore
-  vis = new EffectOMaticVisualizer(int(width * boxX), int(height * 0.4), 30, 40, data.length);
-  vis.setValues(data);
-
   // comando luci
   comm = new EffectOMaticCommander(this);
   comm.setValues(data);
+  
+  // visualizzatore
+  soundVis = new SoundAnalizerVisualizer(int(width * boxX), int(height * 0.80));
+  vis = new EffectOMaticVisualizer(int(width * boxX), int(height * 0.4), 30, 40, data.length);
+  vis.setValues(data);
 }
 
 void draw()
@@ -85,6 +82,9 @@ void stop()
   super.stop();
 }
 
+/**
+ * Gestione mouse
+ */
 void mousePressed() {
   controlPanel.mousePressed();
 }

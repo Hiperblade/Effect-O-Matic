@@ -1,8 +1,8 @@
-/**
- */
-
 import processing.serial.*;
- 
+
+/**
+ * Componente di interfacciamento con la seriale (collegamento con arduino)
+ */
 public class EffectOMaticCommander
 {
   private Serial port;
@@ -44,6 +44,9 @@ public class EffectOMaticCommander
     }
   }
   
+  /**
+   * Invia i valori alla porta seriale
+   */
   public void setValues(int[] values)
   {
     byte[] bytes = new byte[values.length];

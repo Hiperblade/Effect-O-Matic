@@ -1,6 +1,6 @@
 /**
+ * Visualizzatore grafico dei dati elaborati da un effetto (IEffectOMatic)
  */
-
 public class EffectOMaticVisualizer
 {
   private int x;
@@ -10,6 +10,12 @@ public class EffectOMaticVisualizer
   private int number;
   private int[] values;
   
+  /**
+   * Costruttore:
+   * x e y = posizione
+   * width e height = dimensione
+   * number = numero di valori visualizzati
+   */
   public EffectOMaticVisualizer(int x, int y, int width, int height, int number)
   {
     this.x = x;
@@ -20,17 +26,26 @@ public class EffectOMaticVisualizer
     values = new int[number];
   }
   
+  /**
+   * Imposta i valori da visualizzare
+   */
   public void setValues(int[] values)
   {
     this.values = values;
   }
   
+  /**
+   * Imposta i valori da visualizzare e li visualizza
+   */
   public void draw(int[] values)
   {
     setValues(values);
     draw();
   }
   
+  /**
+   * Visualizzara i valori correnti
+   */
   public void draw()
   {
     stroke(0);

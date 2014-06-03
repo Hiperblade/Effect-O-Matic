@@ -1,6 +1,6 @@
 /**
+ * Interfaccia di base degli effetti 
  */
-
 public interface IEffectOMatic
 {
   String getName();
@@ -8,6 +8,11 @@ public interface IEffectOMatic
   int[] process(SoundAnalizerData data);
 }
 
+// -----------------------------------------------------------------------
+
+/**
+ * Classe base per gli effetti che utilizzano il Beat e la dissolvenza
+ */
 public abstract class EffectBeatDecay implements IEffectOMatic
 {
   protected int[] values = new int[] {0, 0, 0, 0, 0};
@@ -36,6 +41,9 @@ public abstract class EffectBeatDecay implements IEffectOMatic
   }
 }
 
+/**
+ * Classe base per gli effetti temporizzati
+ */
 public abstract class EffectBaseStep implements IEffectOMatic
 {
   private final int STEP = 15;
@@ -53,10 +61,26 @@ public abstract class EffectBaseStep implements IEffectOMatic
     }
     return false;
   }
+  
+  public int[] process(SoundAnalizerData data)
+  {
+    if(!isStep())
+    {
+      return values;
+    }
+    
+    values = internalProcess(data);
+    return values;
+  }
+  
+  protected abstract int[] internalProcess(SoundAnalizerData data);
 }
 
-// ------------------------------------------------------------------------------
+// -----------------------------------------------------------------------
 
+/**
+ * Effetto neutro
+ */
 public class EffectOff implements IEffectOMatic
 {
   public String getName() { return "Off"; }
@@ -69,6 +93,9 @@ public class EffectOff implements IEffectOMatic
   }
 }
 
+/**
+ * Effetto automatico (Kitt)
+ */
 public class EffectKitt extends EffectBaseStep
 {
   private final int[] VALUE = new int[]{255, 200, 100, 50, 0};
@@ -79,13 +106,8 @@ public class EffectKitt extends EffectBaseStep
   
   public String getDescription() { return "Kitt (SuperCar)"; }
   
-  public int[] process(SoundAnalizerData data)
+  protected int[] internalProcess(SoundAnalizerData data)
   {
-    if(!isStep())
-    {
-      return values;
-    }
-    
     if(forward)
     {
       position = (position + 1) % 5;
@@ -136,24 +158,24 @@ public class EffectKitt extends EffectBaseStep
   }
 }
 
+/**
+ * Effetto automatico (Disturbo)
+ */
 public class EffectNoise extends EffectBaseStep
 {
   public String getName() { return "Noise"; }
   
   public String getDescription() { return "Disturbo"; }
   
-  public int[] process(SoundAnalizerData data)
-  {
-    if(!isStep())
-    {
-      return values;
-    }
-    
-    values = new int[]{ int(random(255)), int(random(255)), int(random(255)), int(random(255)), int(random(255)) };
-    return values;
+  protected int[] internalProcess(SoundAnalizerData data)
+  { 
+    return new int[]{ int(random(255)), int(random(255)), int(random(255)), int(random(255)), int(random(255)) };
   }
 }
 
+/**
+ * Effetto beat (Goccia di pioggia) 
+ */
 public class EffectDrop extends EffectBeatDecay
 {
   public String getName() { return "Drop"; }
@@ -187,11 +209,14 @@ public class EffectDrop extends EffectBeatDecay
   }
 }
 
-public class EffectBeat extends EffectBeatDecay
+/**
+ * Effetto beat (Colpo)
+ */
+public class EffectHit extends EffectBeatDecay
 {
   private final int[] VALUE = new int[]{120, 180, 255, 180, 120};
   
-  public String getName() { return "Beat"; }
+  public String getName() { return "Hit"; }
   
   public String getDescription() { return "Colpo"; }
   
@@ -206,6 +231,9 @@ public class EffectBeat extends EffectBeatDecay
   }
 }
 
+/**
+ * Effetto beat (Barra)
+ */
 public class EffectBar extends EffectBeatDecay
 {
   private final float DECAY = 0.7;
@@ -229,11 +257,14 @@ public class EffectBar extends EffectBeatDecay
   }
 }
 
-public class EffectEqualizer implements IEffectOMatic
+/**
+ * Effetto frequenze (Spettro)
+ */
+public class EffectSpectrum implements IEffectOMatic
 {
-  public String getName() { return "Equalizer"; }
+  public String getName() { return "Spectrum"; }
   
-  public String getDescription() { return "Equalizzatore"; }
+  public String getDescription() { return "Spettro"; }
   
   public int[] process(SoundAnalizerData data)
   {   
@@ -245,34 +276,3 @@ public class EffectEqualizer implements IEffectOMatic
     return ret;
   }
 }
-
-/*
-public class EffectEqualizerDecay extends EffectBeatDecay
-{
-  public String getName() { return "EqualizerDecay"; }
-  
-  public String getDescription() { return "Equ. Echo"; }
-  
-  private SoundAnalizerData incomingData;
-  
-  public int[] process(SoundAnalizerData data)
-  {
-    if(data.getBeat())
-    {
-      incomingData = data;
-    }
-    
-    return super.process(data);
-  }
-  
-  protected int getPattern(int index)
-  {
-    return int(incomingData.getValues()[index] * 255);
-  }
-  
-  protected float getDecay(int index)
-  {
-    return 0.99;
-  }
-}
-*/
