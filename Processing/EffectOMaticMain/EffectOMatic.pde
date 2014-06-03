@@ -79,7 +79,7 @@ public abstract class EffectBaseStep implements IEffectOMatic
 // -----------------------------------------------------------------------
 
 /**
- * Effetto neutro
+ * Effetto spento
  */
 public class EffectOff implements IEffectOMatic
 {
