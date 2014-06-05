@@ -1,6 +1,8 @@
 /**
  * Effect-O-Matic 1.0
  */
+final int LENGTH = 5;
+
 SoundAnalizer sound;
 EffectOMaticControlPanel controlPanel;
 EffectOMaticCommander comm;
@@ -22,14 +24,14 @@ void setup()
   controlPanel = new EffectOMaticControlPanel(
     int(width * 0.66) - 30, 10,
     new IEffectOMatic[]{
-      new EffectKitt(),
-      new EffectNoise(),
-      new EffectDrop(),
-      new EffectHit(),
-      new EffectBar(),
-      new EffectSpectrum()
+      new EffectKitt(LENGTH),
+      new EffectNoise(LENGTH),
+      new EffectDrop(LENGTH),
+      new EffectHit(LENGTH),
+      new EffectBar(LENGTH),
+      new EffectSpectrum(LENGTH)
       },
-      new EffectOff());
+      new EffectOff(LENGTH));
 
   // analizzatore del suono
   sound = new SoundAnalizer(this);
@@ -40,7 +42,7 @@ void setup()
   
   // visualizzatore
   soundVis = new SoundAnalizerVisualizer(int(width * boxX), int(height * 0.80));
-  vis = new EffectOMaticVisualizer(int(width * boxX), int(height * 0.4), 30, 40, data.length);
+  vis = new EffectOMaticVisualizer(int(width * boxX), int(height * 0.4), 30, 40, LENGTH);
   vis.setValues(data);
 }
 

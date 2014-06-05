@@ -15,7 +15,14 @@ public interface IEffectOMatic
  */
 public abstract class EffectBeatDecay implements IEffectOMatic
 {
-  protected int[] values = new int[] {0, 0, 0, 0, 0};
+  protected int length;
+  protected int[] values;// = new int[] {0, 0, 0, 0, 0};
+  
+  public EffectBeatDecay(int length)
+  {
+    this.length = length;
+    values = new int[length];
+  }
   
   protected abstract int getPattern(int index);
   
@@ -25,14 +32,14 @@ public abstract class EffectBeatDecay implements IEffectOMatic
   {
     if(data.getBeat())
     {
-      for(int i = 0; i < 5; i++)
+      for(int i = 0; i < length; i++)
       {
         values[i] = getPattern(i);
       }
     }
     else
     {
-      for(int i = 0; i < 5; i++)
+      for(int i = 0; i < length; i++)
       {
         values[i] = int(values[i] * getDecay(i));
       }
@@ -49,7 +56,14 @@ public abstract class EffectBaseStep implements IEffectOMatic
   private final int STEP = 15;
   private int iteration = 0;
  
-  protected int[] values = new int[]{0, 0, 0, 0, 0};
+  protected int length; 
+  protected int[] values;
+ 
+  public EffectBaseStep(int length)
+  {
+    this.length = length;
+    values = new int[length];
+  }
   
   protected boolean isStep()
   {
@@ -83,13 +97,22 @@ public abstract class EffectBaseStep implements IEffectOMatic
  */
 public class EffectOff implements IEffectOMatic
 {
+  protected int length; 
+  protected int[] values;
+ 
+  public EffectOff(int length)
+  {
+    this.length = length;
+    values = new int[length];
+  }
+  
   public String getName() { return "Off"; }
   
   public String getDescription() { return "Spento"; }
   
   public int[] process(SoundAnalizerData data)
   {
-    return new int[] {0, 0, 0, 0, 0};
+    return values;
   }
 }
 
@@ -97,10 +120,15 @@ public class EffectOff implements IEffectOMatic
  * Effetto automatico (Kitt)
  */
 public class EffectKitt extends EffectBaseStep
-{
+{ 
   private final int[] VALUE = new int[]{255, 200, 100, 50, 0};
   private int position = -1;
   private boolean forward = true;
+ 
+  public EffectKitt(int length)
+  {
+    super(length);
+  }
  
   public String getName() { return "Kitt"; }
   
@@ -110,31 +138,47 @@ public class EffectKitt extends EffectBaseStep
   {
     if(forward)
     {
-      position = (position + 1) % 5;
+      position = (position + 1) % length;
       
       for(int i = position; i > 0; i--)
       {
         values[i] = values[i - 1];
       }
-      values[0] = VALUE[position];
-      for(int i = position + 1; i < 4; i++)
+      if(position < VALUE.length)
+      {
+        values[0] = VALUE[position];
+      }
+      else
+      {
+        values[0] = 0;
+      }
+      for(int i = position + 1; i < (length - 1); i++)
       {
         values[i] = values[i + 1];
       }
-      if(position < 4)
+      if(position < (length - 1))
       {
-        values[4] = 0;
+        values[(length - 1)] = 0;
       }
     }
     else
     {
-      position = (position - 1) % 5;
+      position = (position - 1) % length;
       
-      for(int i = position; i < 4; i++)
+      for(int i = position; i < (length - 1); i++)
       {
         values[i] = values[i + 1];
       }
-      values[4] = VALUE[4 - position];
+      
+      if((length - 1) - position < VALUE.length)
+      {
+        values[(length - 1)] = VALUE[(length - 1) - position];
+      }
+      else
+      {
+        values[(length - 1)] = 0;
+      }
+      
       for(int i = position - 1; i > 0; i--)
       {
         values[i] = values[i - 1];
@@ -149,7 +193,7 @@ public class EffectKitt extends EffectBaseStep
     {
       forward = true;
     }
-    else if (position == 4)
+    else if (position == (length - 1))
     {
       forward = false;
     }
@@ -163,13 +207,23 @@ public class EffectKitt extends EffectBaseStep
  */
 public class EffectNoise extends EffectBaseStep
 {
+  public EffectNoise(int length)
+  {
+    super(length);
+  }
+  
   public String getName() { return "Noise"; }
   
   public String getDescription() { return "Disturbo"; }
   
   protected int[] internalProcess(SoundAnalizerData data)
-  { 
-    return new int[]{ int(random(255)), int(random(255)), int(random(255)), int(random(255)), int(random(255)) };
+  {
+    int[] ret = new int[length];
+    for(int i = 0; i < length; i++)
+    {
+      ret[i] = int(random(255));
+    }
+    return ret;
   }
 }
 
@@ -178,6 +232,11 @@ public class EffectNoise extends EffectBaseStep
  */
 public class EffectDrop extends EffectBeatDecay
 {
+  public EffectDrop(int length)
+  {
+    super(length);
+  }
+  
   public String getName() { return "Drop"; }
   
   public String getDescription() { return "Goccia"; }
@@ -191,7 +250,7 @@ public class EffectDrop extends EffectBeatDecay
       int newDrop = currentDrop;
       while(newDrop == currentDrop)
       {
-        newDrop = int(random(5));
+        newDrop = int(random(length));
       }
       currentDrop = newDrop;
     }
@@ -214,7 +273,12 @@ public class EffectDrop extends EffectBeatDecay
  */
 public class EffectHit extends EffectBeatDecay
 {
-  private final int[] VALUE = new int[]{120, 180, 255, 180, 120};
+  public EffectHit(int length)
+  {
+    super(length);
+  }
+
+  private final int[] VALUE = new int[]{255, 180, 120, 75, 40, 20, 0};
   
   public String getName() { return "Hit"; }
   
@@ -222,7 +286,23 @@ public class EffectHit extends EffectBeatDecay
   
   protected int getPattern(int index)
   {
-    return VALUE[index];
+    int valueIndex = index - int(length / 2);
+    //correzione in caso di lunghezza pari
+    if(length % 2 == 0)
+    {
+      if(valueIndex < 0)
+      {
+        valueIndex = valueIndex + 1;
+      }
+    }
+    // valore assoluto
+    valueIndex = abs(valueIndex);
+    // gestione indici superiori
+    if(valueIndex >= VALUE.length)
+    {
+      valueIndex = VALUE.length - 1;
+    }
+    return VALUE[valueIndex];
   }
   
   protected float getDecay(int index)
@@ -236,6 +316,11 @@ public class EffectHit extends EffectBeatDecay
  */
 public class EffectBar extends EffectBeatDecay
 {
+  public EffectBar(int length)
+  {
+    super(length);
+  }
+  
   private final float DECAY = 0.7;
   
   public String getName() { return "Bar"; }
@@ -249,7 +334,7 @@ public class EffectBar extends EffectBeatDecay
   
   protected float getDecay(int index)
   {
-    if((values[index] > 0) && (index == 4 || values[index + 1] == 0))
+    if((values[index] > 0) && (index == (length - 1) || values[index + 1] == 0))
     {
       return DECAY;
     }
@@ -262,14 +347,21 @@ public class EffectBar extends EffectBeatDecay
  */
 public class EffectSpectrum implements IEffectOMatic
 {
+  protected int length; 
+
+  public EffectSpectrum(int length)
+  {
+    this.length = length;
+  }
+  
   public String getName() { return "Spectrum"; }
   
   public String getDescription() { return "Spettro"; }
   
   public int[] process(SoundAnalizerData data)
   {   
-    int[] ret = new int[5];
-    for(int i = 0; i < 5; i++)
+    int[] ret = new int[length];
+    for(int i = 0; i < length; i++)
     {
       ret[i] = int(data.getValues()[i] * 255);
     }
