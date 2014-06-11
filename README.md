@@ -1,4 +1,4 @@
-Effect-O-Matic
+Effect-O-Matic 1.0
 ==============
 
 Consolle luci a tempo di musica.
