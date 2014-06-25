@@ -6,7 +6,7 @@ Consolle luci a tempo di musica.
 Pannello di controllo:
 ![Consolle](/readme/Consolle.jpg "Consolle")
 
-Schema scheda di controllo:
+Schema scheda di controllo: (PS. il codice dei transistors è BD237)
 ![ControllBoard](/readme/ControllBoard.jpg "ControllBoard")
 
 Collegamento con arduino:
