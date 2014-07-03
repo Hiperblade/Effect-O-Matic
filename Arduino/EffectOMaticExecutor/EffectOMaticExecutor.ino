@@ -1,7 +1,10 @@
 // EffectOMaticExecutor
 
-const int numberPins = 5;
+//const int pwnPins[] = {3, 5, 6, 9, 10, 11}; // Arduino UNO
+//const int pwnPins[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}; // Arduino DUE / MEGA
 const int pwnPins[] = {3, 5, 6, 9, 10};
+
+const int numberPins = sizeof(pwnPins) / sizeof(int);
 char data[numberPins];
 
 void setup()

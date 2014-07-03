@@ -2,6 +2,7 @@
  * Effect-O-Matic 1.0
  */
 final int LENGTH = 5;
+//final int LENGTH = 10;
 
 SoundAnalizer sound;
 EffectOMaticControlPanel controlPanel;
@@ -42,7 +43,14 @@ void setup()
   
   // visualizzatore
   soundVis = new SoundAnalizerVisualizer(int(width * boxX), int(height * 0.80));
-  vis = new EffectOMaticVisualizer(int(width * boxX), int(height * 0.4), 30, 40, LENGTH);
+  if(LENGTH <= 6)
+  {
+    vis = new EffectOMaticVisualizer(int(width * boxX), int(height * 0.4), 30, 40, LENGTH);
+  }
+  else
+  {
+    vis = new EffectOMaticVisualizer(int(width * boxX), int(height * 0.4), 20, 40, LENGTH);
+  }
   vis.setValues(data);
 }
 
